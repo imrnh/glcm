@@ -1,3 +1,4 @@
+import numpy as np
 import math
 
 def write_glcm_step(glcm_image, index, args):
@@ -11,10 +12,12 @@ def write_glcm_step(glcm_image, index, args):
 
 
     with open(f"sims/{index}.txt", "w") as f:
-        f.write(f"i: {args[0]}\nj: {args[1]}\nshifted_row: {args[2]}\nshifted_col: {args[3]}\n")
-        f.write(f"Intensity i value (GLSM row idx): {args[4]}\n")
-        f.write(f"Intensity j value (GLSM col idx): {args[5]}\n")
-        f.write("\n\n\n\n")
+
+        if args != None:
+            f.write(f"i: {args[0]}\nj: {args[1]}\nshifted_row: {args[2]}\nshifted_col: {args[3]}\n")
+            f.write(f"Intensity i value (GLSM row idx): {args[4]}\n")
+            f.write(f"Intensity j value (GLSM col idx): {args[5]}\n")
+            f.write("\n\n\n\n")
 
 
         for row in glcm_image:
@@ -59,9 +62,36 @@ def inverse_diff_moment(n_glcm):
     return round(idm, 2)
 
 def get_angular_2nd_mom(n_glcm):
-    mom = 0
-    for r_idx, row in enumerate(n_glcm):
-        for c_idx, ng_val in enumerate(row):
-            mom += ng_val ** 2
-    
-    return round(mom, 2)
+    return np.sum(n_glcm**2)
+
+
+def get_correlation(n_glcm):
+    i_indices, j_indices = np.indices(n_glcm.shape)
+    mu_i = np.sum(i_indices * n_glcm)
+    mu_j = np.sum(j_indices * n_glcm)
+    sigma_i = np.sqrt(np.sum((i_indices - mu_i)**2 * n_glcm))
+    sigma_j = np.sqrt(np.sum((j_indices - mu_j)**2 * n_glcm))
+    correlation = np.sum((i_indices - mu_i) * (j_indices - mu_j) * n_glcm) / (sigma_i * sigma_j)
+
+    return correlation
+
+
+def get_sum_variance(n_glcm, max_intensity):
+    px_plus_y = [np.sum(n_glcm[k - l, l]) for k in range(2 * max_intensity) for l in range(max_intensity) if 0 <= k - l < max_intensity]
+    sum_mean = np.sum([i * px_plus_y[i] for i in range(len(px_plus_y))])
+    sum_variance = np.sum([(i - sum_mean) ** 2 * px_plus_y[i] for i in range(len(px_plus_y))])
+
+    return sum_variance
+
+def get_info_measure_correlation(n_glcm):
+    epsilon = 1e-10
+    px = np.sum(n_glcm, axis=1)
+    py = np.sum(n_glcm, axis=0)
+    H_xy = -np.sum(n_glcm * np.log(n_glcm + epsilon))
+    H_x = -np.sum(px * np.log(px + epsilon))
+    H_y = -np.sum(py * np.log(py + epsilon))
+    H_xy1 = -np.sum(n_glcm * np.log(np.outer(px, py) + epsilon))
+    IMC1 = (H_xy - H_xy1) / max(H_x, H_y)
+    IMC2 = np.sqrt(max(0, 1 - np.exp(-2 * (H_xy - H_xy1))))
+
+    return IMC1, IMC2

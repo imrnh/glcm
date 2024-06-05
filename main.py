@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from glcm import make_glcm
-from utils import get_entropy, get_contrast, get_homogeneity, inverse_diff_moment, get_angular_2nd_mom
+from utils import get_entropy, get_contrast, get_homogeneity, inverse_diff_moment, get_angular_2nd_mom, get_correlation, get_info_measure_correlation, get_sum_variance, write_glcm_step
 
 if __name__ == "__main__":
     os.makedirs("sims", exist_ok=True)
@@ -27,12 +27,16 @@ if __name__ == "__main__":
     glcm = make_glcm(image_rounded, displacement, levels=9)
     normalized_glcm = glcm / sum(sum(glcm))
     normalized_glcm = np.round(normalized_glcm, 2)
+    write_glcm_step(normalized_glcm, "normalized_glcm", None)
 
-    print(f"GLCM: {glcm}")
-    print(f"Normalized GLCM:\n {normalized_glcm}")
+    print(f"GLCM: \n{glcm}")
+    print(f"\n\nNormalized GLCM:\n {normalized_glcm}")
 
     print(f"Entropy: {get_entropy(normalized_glcm)}")
     print(f"Contrast: {get_contrast(normalized_glcm)}")
     print(f"Homogeneity: {get_homogeneity(normalized_glcm)}")
     print(f"Inverse Difference Moment: {inverse_diff_moment(normalized_glcm)}")
     print(f"Angular 2nd momentum: {get_angular_2nd_mom(normalized_glcm)}")
+    print(f"Correlation: {get_correlation(normalized_glcm)}")
+    print(f"Sum Variance: {get_sum_variance(normalized_glcm, 9)}")
+    print(f"Info Measure: {get_info_measure_correlation(normalized_glcm)}")

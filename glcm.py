@@ -24,8 +24,8 @@ def make_glcm(image, displacement, levels):
             intensity_i = image[row, col]
             row_offset, col_offset = displacement
 
-            neighbor_row = row + row_offset
-            neighbor_col = col + col_offset
+            neighbor_row = row + col_offset
+            neighbor_col = col + row_offset
             if 0 <= neighbor_row < rows and 0 <= neighbor_col < cols:
                 step_count += 1
                 intensity_j = image[neighbor_row, neighbor_col]
