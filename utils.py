@@ -27,14 +27,8 @@ def write_glcm_step(glcm_image, index, args):
 
 
 def get_entropy(n_glcm):
-    entropy = 0
     epsilon = 0.00001
-    for row in n_glcm:
-        for ng_val in row:
-            entropy += -(ng_val * math.log2(ng_val + epsilon)) # To prevent log(0)
-    
-    return round(entropy, 2)
-
+    return round(-np.sum(n_glcm * np.log2(n_glcm + epsilon)), 2)
 
 def get_contrast(n_glcm):
     contrast = 0
@@ -93,5 +87,17 @@ def get_info_measure_correlation(n_glcm):
     H_xy1 = -np.sum(n_glcm * np.log(np.outer(px, py) + epsilon))
     IMC1 = (H_xy - H_xy1) / max(H_x, H_y)
     IMC2 = np.sqrt(max(0, 1 - np.exp(-2 * (H_xy - H_xy1))))
+
+
+    print("\n\n")
+    print(f"px: {px}")
+    print(f"py: {py}")
+    print(f"H_xy: {H_xy}")
+    print(f"H_x: {H_x}")
+    print(f"H_y: {H_y}")
+    print(f"H_xy1: {H_xy1}")
+
+
+    print("\n\n")
 
     return IMC1, IMC2
