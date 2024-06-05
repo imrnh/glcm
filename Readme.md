@@ -15,3 +15,8 @@ For ex:
 
 4. Update displacement in main.py line 11
 5. Run main.py
+
+
+## Notice
+
+All the GLCM steps are saved inside the sims folder. Write them on your assignment
