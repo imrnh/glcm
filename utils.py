@@ -1,5 +1,27 @@
 import math
 
+def write_glcm_step(glcm_image, index, args):
+    """
+    Write the full array into corresponding file.
+
+    Args:
+        glcm_image: the actual glcm_image at i'th step
+        index: i value
+    """
+
+
+    with open(f"sims/{index}.txt", "w") as f:
+        f.write(f"i: {args[0]}\nj: {args[1]}\nshifted_row: {args[2]}\nshifted_col: {args[3]}\n")
+        f.write(f"Intensity i value (GLSM row idx): {args[4]}\n")
+        f.write(f"Intensity j value (GLSM col idx): {args[5]}\n")
+        f.write("\n\n\n\n")
+
+
+        for row in glcm_image:
+            row_string = '\t\t'.join(map(str, row))
+            f.write(row_string + '\n')
+
+
 
 def get_entropy(n_glcm):
     entropy = 0

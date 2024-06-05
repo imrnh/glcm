@@ -1,22 +1,5 @@
 import numpy as np
-from PIL import Image
-
-
-def write_glcm_step(glcm_image, index):
-    """
-    Write the full array into corresponding file.
-
-    Args:
-        glcm_image: the actual glcm_image at i'th step
-        index: i value
-    """
-
-
-    with open(f"sims/{index}.txt", "w") as f:
-        for row in glcm_image:
-            row_string = ' '.join(map(str, row))
-            f.write(row_string + '\n')
-
+from utils import write_glcm_step
 
 
 def make_glcm(image, displacement, levels):
@@ -32,7 +15,7 @@ def make_glcm(image, displacement, levels):
         The GLCM Array
     """
     rows, cols = image.shape
-    glcm = np.zeros((levels+1, levels+1))
+    glcm = np.zeros((levels+1, levels+1), dtype=np.uint8)
 
 
     step_count = 0
@@ -47,7 +30,7 @@ def make_glcm(image, displacement, levels):
                 step_count += 1
                 intensity_j = image[neighbor_row, neighbor_col]
                 glcm[intensity_i, intensity_j] += 1
-                write_glcm_step(glcm, step_count)
+                write_glcm_step(glcm, step_count, [row, col, neighbor_row, neighbor_col, intensity_i, intensity_j])
 
     return glcm
 
