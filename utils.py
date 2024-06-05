@@ -22,7 +22,7 @@ def write_glcm_step(glcm_image, index, args):
 
         for row in glcm_image:
             row_string = '\t\t'.join(map(str, row))
-            f.write(row_string + '\n')
+            f.write(row_string + '\n\n')
 
 
 
