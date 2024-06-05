@@ -13,7 +13,7 @@ if __name__ == "__main__":
     )
 
     image_rounded = np.rint(image).astype(int)
-    displacement = [0, -1]
+    displacement = [] # Your displacement here
     glcm = make_glcm(image_rounded, displacement, levels=9)
     normalized_glcm = glcm / sum(sum(glcm))
 
